@@ -10,5 +10,15 @@ repository = {
             arch = "rockspec"
          }
       }
+   },
+   luacheck = {
+      ["1.2.0-1"] = {
+         {
+            arch = "src"
+         },
+         {
+            arch = "rockspec"
+         }
+      }
    }
 }
