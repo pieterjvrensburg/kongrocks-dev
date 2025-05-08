@@ -1,0 +1,18 @@
+name: Pull request author check
+on:
+  pull_request:
+    paths:
+      - 'rocks/**'
+
+jobs:
+  pr-author-check:
+    name: Pull request author check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: check author
+      if: ${{ github.event.pull_request.user.login != 'kong[bot]' }}
+      run: |
+        echo "A PR that adds or removes a rock must be created by the "Import new rock" action instead of being created manually"
+        echo "Please use this link to create a PR instead: https://github.com/Kong/kong_dev_rocks/actions/workflows/add-rock.yaml"
+        exit 1

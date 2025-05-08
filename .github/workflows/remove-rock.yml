@@ -1,0 +1,80 @@
+name: Remove unused Rocks
+on:
+  workflow_dispatch:
+  schedule:
+  # every 1st day of months
+  - cron:  '0 0 1 * *'
+
+run-name: Remove unused rocks
+
+jobs:
+  remove_rock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+        with:
+          # required to fetch full history for getting timestamp
+          fetch-depth: 0
+
+      - name: Check unused rocks 
+        run: ./remove-unused-rocks.sh 
+
+      - name: Display stats
+        run: |
+          cat used_rocks.txt | column -s '|' -t
+
+      - name: Set rocks data
+        id: rocks_data
+        run: |
+            {
+              echo "used_rocks<<EOF"
+              cat used_rocks.txt
+              echo "EOF"
+              echo "unused_rocks<<EOF"
+              cat unused_rocks.txt
+              echo "EOF"
+              echo "removed_rocks<<EOF"
+              cat removed_rocks.txt
+              echo "EOF"
+            } >> $GITHUB_OUTPUT
+
+      - name: Generate kong bot app token
+        id: github-app-token
+        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2.1.0
+        with:
+          app_id: ${{ vars.KONG_GH_APP_ID }}
+          private_key: ${{ secrets.KONG_GH_APP_PRIVATE_KEY }}
+
+      - name: Open PR
+        uses: Kong/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7
+        if: ${{ steps.rocks_data.outputs.unused_rocks != '' }}
+        with:
+          token: ${{ steps.github-app-token.outputs.token }}
+          base: main
+          author: GitHub Actions <noreply@github.com>
+          branch: remove-${{ github.run_id }} 
+          add-paths: |
+            rocks/*
+          title: Remove unused rocks 
+          body: |
+            ### Summary
+            Only unused rocks that are added before 14 days are removed.
+
+            ${{ steps.rocks_data.outputs.unused_rocks }}
+
+            ### Notes
+            <details><summary>Current rocks usage info:</summary>
+            
+            ${{ steps.rocks_data.outputs.used_rocks }}
+
+            </details>
+
+            ### Author
+            The workflow was dispatched by @${{ github.event_name == 'schedule' && 'github-actions' || github.actor }}.
+
+          commit-message: |
+            chore(deps): remove following unused rocks
+
+            ${{ steps.rocks_data.outputs.removed_rocks }}
+

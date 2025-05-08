@@ -1,0 +1,59 @@
+name: Import new Rock
+on:
+  workflow_dispatch:
+    inputs:
+      rock_name:
+        description: The name of the library to be imported
+        required: true
+      rock_version:
+        description: The version of the library
+        required: true
+      description:
+        description: Where is this required? Write some context (with links if possible)
+        required: true
+
+run-name: Add rock ${{ inputs.rock_name }} ${{ inputs.rock_version }}
+
+jobs:
+  add_rock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+
+      - name: Add the Rock
+        run: ./add-rock.sh ${{ inputs.rock_name }} ${{ inputs.rock_version }}
+
+      - name: Generate kong bot app token
+        id: github-app-token
+        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2.1.0
+        with:
+          app_id: ${{ vars.KONG_GH_APP_ID }}
+          private_key: ${{ secrets.KONG_GH_APP_PRIVATE_KEY }}
+
+      - name: Open PR
+        uses: Kong/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7
+        with:
+          token: ${{ steps.github-app-token.outputs.token }}
+          base: main
+          author: GitHub Actions <noreply@github.com>
+          branch: add-${{ inputs.rock_name }}-${{ inputs.rock_version }}
+          add-paths: |
+            rocks/*
+          title: add ${{ inputs.rock_name }} ${{ inputs.rock_version }}
+          body: |
+            ### Summary
+            Add new library **${{ inputs.rock_name }} ${{ inputs.rock_version }}**.
+            ### Observations
+            - This PR was generated with `./add-rocks.sh`
+            - `luarocks-admin make_manifest` will at times change the ordering
+            of table fields in `rock/manifest*` files; please ignore these!
+            ### Author
+            The workflow was dispatched by @${{ github.actor }}, with the following description:
+            > ${{ inputs.description }}
+
+          commit-message: |
+            chore(deps): add ${{ inputs.rock_name }} ${{ inputs.rock_version }}
+
+            workflow dispatched by @${{ github.actor }}, with the following details:
+            > ${{ inputs.description }}

@@ -1,0 +1,23 @@
+---
+name: Create Release
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+    - main
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Release
+      id: release
+      uses: ahmadnassri/action-semantic-release@0c9862952ecc5c3baf7a119c06ae77791eea1a2c # v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        branches: main
+        format: v${version}
