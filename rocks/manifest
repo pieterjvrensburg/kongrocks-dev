@@ -40,5 +40,15 @@ repository = {
             arch = "rockspec"
          }
       }
+   },
+   luacov = {
+      ["0.16.0-1"] = {
+         {
+            arch = "rockspec"
+         },
+         {
+            arch = "src"
+         }
+      }
    }
 }
