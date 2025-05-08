@@ -11,6 +11,16 @@ repository = {
          }
       }
    },
+   ["lua-llthreads2"] = {
+      ["0.1.6-1"] = {
+         {
+            arch = "src"
+         },
+         {
+            arch = "rockspec"
+         }
+      }
+   },
    luacheck = {
       ["1.2.0-1"] = {
          {
