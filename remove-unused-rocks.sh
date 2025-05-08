@@ -46,13 +46,13 @@ rm -f removed_rocks.txt
     for rock in "${!unused_rocks[@]}"; do
         ts="${unused_rocks[$rock]}"
         echo -n "| $rock | $(date -d @$ts +'%x') |"
-        #if [ "$(date -d '-14 days' +%s)" -gt "$ts" ]; then
+        if [ "$(date -d '-14 days' +%s)" -gt "$ts" ]; then
             rm -f rocks/$rock.rockspec rocks/$rock.src.rock
             echo "$rock" >> removed_rocks.txt
             echo "Yes |"
-        #else
-        #    echo "No |"
-        #fi
+        else
+            echo "No |"
+        fi
     done | sort
 } > unused_rocks.txt
 
