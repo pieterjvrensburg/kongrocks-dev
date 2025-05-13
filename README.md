@@ -4,7 +4,7 @@ This repository serves as Kong Gateway's private Luarocks server.
 
 ### How to add a new Rock
 
-The workflow https://github.com/kong-gateway/kong_dev_rocks/actions/workflows/add-rock.yaml
+The workflow https://github.com/kong/kong_dev_rocks/actions/workflows/add-rock.yaml
 automates the addition of new rocks.
 
 - Click "Run workflow" on the right-hand side, enter the rock name and
@@ -13,7 +13,7 @@ version, and confirm.
 
 ### How to remove unused Rock
 
-The workflow https://github.com/kong-gateway/kong_dev_rocks/actions/workflows/remove-unused-rock.yaml
+The workflow https://github.com/kong/kong_dev_rocks/actions/workflows/remove-unused-rock.yaml
 automates the removal of unused rocks.
 
 - Click "Run workflow" on the right-hand side and confirm.
