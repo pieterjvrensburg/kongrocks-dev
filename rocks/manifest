@@ -189,6 +189,16 @@ repository = {
          }
       }
    },
+   luassert = {
+      ["1.9.0-1"] = {
+         {
+            arch = "src"
+         },
+         {
+            arch = "rockspec"
+         }
+      }
+   },
    luasystem = {
       ["0.2.0-0"] = {
          {
