@@ -20,7 +20,7 @@ if [ $# -ne 2 ]; then
   usage
 fi
 
-apt-get update -qq && apt-get install -qq -y lua5.4
+apt-get update -qq && apt-get install -qq -y luarocks
 
 luarocks download --all $1 $2
 
