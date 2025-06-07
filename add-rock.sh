@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+# set -e
 
 if ! luarocks-admin 2>&1 >/dev/null && ! test -e /.dockerenv; then
     docker run --rm -v $PWD:/work -w /work --user=root --rm ubuntu bash /work/$(basename $0) $@
@@ -20,7 +20,7 @@ if [ $# -ne 2 ]; then
   usage
 fi
 
-apt-get update -qq && apt-get install -qq -y luarocks
+# apt-get update -qq && apt-get install -qq -y luarocks
 
 luarocks download --all $1 $2
 
